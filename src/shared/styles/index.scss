@@ -1,0 +1,33 @@
+@import "src/shared/styles/variables.scss";
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: #f8fafc;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+
+// Reusable Core Action Component Class
+.btn-primary {
+  border: none;
+  border-radius: 0.75rem;
+  background-color: $brand-indigo;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+  box-shadow: 0 10px 15px -3px rgba($brand-indigo, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #4f46e5;
+    box-shadow: 0 10px 15px -3px rgba($brand-indigo, 0.3);
+  }
+}
