@@ -5,7 +5,7 @@ import { HotelsTable } from "src/entities/Hotels/ui/HotelsTable";
 import { getHotels } from "src/entities/Hotels/queries/useGetHotels";
 
 interface FilterState {
-  location?: string;
+  search?: string;
   country?: string;
   maxPrice?: number;
   minRating?: number;
@@ -15,22 +15,15 @@ export default function HomePage() {
   const [hotels, setHotels] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [searchKeyword, setSearchKeyword] = useState("");
+  // Structural filters state
   const [filters, setFilters] = useState<FilterState>({
+    search: "",
     country: "",
     maxPrice: 1000,
     minRating: 0,
   });
 
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      setFilters((prev) => ({ ...prev, search: searchKeyword }));
-    }, 300);
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchKeyword]);
-
-  // Fetch data automatically on structured filter state changes
+  // Fetch data ONLY when the centralized filters object updates
   useEffect(() => {
     let isMounted = true;
     setIsLoading(true);
@@ -52,15 +45,11 @@ export default function HomePage() {
     };
   }, [filters]);
 
-  // Explicit handlers passed down to UI
-  const handleTextChange = (text: string) => {
-    setSearchKeyword(text);
-  };
-
-  const handleModalApply = (modalFilters: Omit<FilterState, "location">) => {
+  // Executed ONLY when clicking the Search button or Applying the modal
+  const handleSearchSubmit = (finalFilters: FilterState) => {
     setFilters((prev) => ({
       ...prev,
-      ...modalFilters,
+      ...finalFilters,
     }));
   };
 
@@ -69,9 +58,8 @@ export default function HomePage() {
       style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 1rem" }}
     >
       <HotelsHeader
-        searchValue={searchKeyword}
-        onSearchChange={handleTextChange}
-        onModalApply={handleModalApply}
+        onSearchSubmit={handleSearchSubmit}
+        currentFilters={filters}
       />
       <HotelsTable hotels={hotels} loading={isLoading} />
     </section>

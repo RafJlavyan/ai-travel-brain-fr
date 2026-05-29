@@ -1,5 +1,5 @@
 // HotelsHeader.tsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Search,
   SlidersHorizontal,
@@ -8,37 +8,97 @@ import {
   DollarSign,
   Star,
 } from "lucide-react";
+import axios from "axios";
 import styles from "./styles.module.scss";
 
 interface HeaderProps {
-  searchValue: string;
-  onSearchChange: (value: string) => void;
-  onModalApply: (filters: {
+  onSearchSubmit: (filters: {
+    search: string;
     country: string;
     maxPrice: number;
     minRating: number;
   }) => void;
+  currentFilters: {
+    country?: string;
+    maxPrice?: number;
+    minRating?: number;
+  };
 }
 
 export const HotelsHeader = ({
-  searchValue,
-  onSearchChange,
-  onModalApply,
+  onSearchSubmit,
+  currentFilters,
 }: HeaderProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [country, setCountry] = useState("");
-  const [maxPrice, setMaxPrice] = useState(1000);
-  const [minRating, setMinRating] = useState(0);
+  const [inputValue, setInputValue] = useState("");
+  const [suggestion, setSuggestion] = useState("");
 
-  const handleApplyFilters = () => {
-    onModalApply({ country, maxPrice, minRating });
-    setIsModalOpen(false);
+  const [country, setCountry] = useState(currentFilters.country || "");
+  const [maxPrice, setMaxPrice] = useState(currentFilters.maxPrice || 1000);
+  const [minRating, setMinRating] = useState(currentFilters.minRating || 0);
+
+  useEffect(() => {
+    const trimmedInput = inputValue.trim();
+    if (trimmedInput.length < 2) {
+      setSuggestion("");
+      return;
+    }
+
+    const delayDebounce = setTimeout(() => {
+      axios
+        .get(`http://localhost:3000/hotels/autocomplete?q=${trimmedInput}`)
+        .then((response) => {
+          const backendMatches: string[] = response.data;
+
+          if (backendMatches && backendMatches.length > 0) {
+            const firstMatch = backendMatches[0];
+
+            const remainingPart = firstMatch.slice(trimmedInput.length);
+            setSuggestion(inputValue + remainingPart);
+          } else {
+            setSuggestion("");
+          }
+        })
+        .catch(() => setSuggestion(""));
+    }, 150);
+
+    return () => clearTimeout(delayDebounce);
+  }, [inputValue]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (
+      (e.key === "Tab" || e.key === "ArrowRight") &&
+      suggestion &&
+      suggestion !== inputValue
+    ) {
+      e.preventDefault();
+      setInputValue(suggestion);
+    }
+    if (e.key === "Enter") {
+      handleExecuteSearch();
+    }
   };
 
-  const handleClearFilters = () => {
-    setCountry("");
-    setMaxPrice(1000);
-    setMinRating(0);
+  const handleExecuteSearch = () => {
+    let finalizedSearchText = inputValue.trim();
+
+    if (suggestion) {
+      finalizedSearchText = suggestion;
+      setInputValue(suggestion);
+      setSuggestion("");
+    }
+
+    onSearchSubmit({
+      search: finalizedSearchText,
+      country,
+      maxPrice: maxPrice || 1000,
+      minRating: minRating || 0,
+    });
+  };
+
+  const handleApplyModal = () => {
+    setIsModalOpen(false);
+    handleExecuteSearch();
   };
 
   return (
@@ -46,13 +106,19 @@ export const HotelsHeader = ({
       <div className={styles.searchBarWrapper}>
         <div className={styles.inputGroup}>
           <Search size={18} className={styles.inputIcon} />
-          <input
-            type="text"
-            placeholder="Search by hotel name, city or country..."
-            value={searchValue}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className={styles.textInput}
-          />
+
+          {/* New positioning structure to stack inputs */}
+          <div className={styles.inputPositioner}>
+            {suggestion && <div className={styles.ghostText}>{suggestion}</div>}
+            <input
+              type="text"
+              placeholder="Where are you going? (e.g. Dilijan...)"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className={styles.textInput}
+            />
+          </div>
         </div>
 
         <button
@@ -65,8 +131,13 @@ export const HotelsHeader = ({
             <span className={styles.badge} />
           )}
         </button>
+
+        <button className={styles.searchButton} onClick={handleExecuteSearch}>
+          Search
+        </button>
       </div>
 
+      {/* Modern Filter Modal Backdrop */}
       {isModalOpen && (
         <div
           className={styles.modalBackdrop}
@@ -143,10 +214,17 @@ export const HotelsHeader = ({
             </div>
 
             <div className={styles.modalFooter}>
-              <button className={styles.clearBtn} onClick={handleClearFilters}>
+              <button
+                className={styles.clearBtn}
+                onClick={() => {
+                  setCountry("");
+                  setMaxPrice(1000);
+                  setMinRating(0);
+                }}
+              >
                 Clear all
               </button>
-              <button className={styles.applyBtn} onClick={handleApplyFilters}>
+              <button className={styles.applyBtn} onClick={handleApplyModal}>
                 Show Results
               </button>
             </div>

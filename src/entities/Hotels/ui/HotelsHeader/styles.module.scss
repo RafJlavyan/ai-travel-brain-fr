@@ -250,6 +250,46 @@
   }
 }
 
+.inputPositioner {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 40px;
+}
+
+.textInput {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: #1f2937;
+  background: transparent; // Crucial to view the ghost layout underneath
+  position: relative;
+  z-index: 2;
+  height: 100%;
+
+  &::placeholder {
+    color: #9ca3af;
+  }
+}
+
+.ghostText {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: #9ca3af; // Emulates light native placeholder text
+  pointer-events: none; // Passes click interactions directly to the text input
+  z-index: 1;
+  white-space: pre;
+}
+
 @keyframes slideUp {
   from {
     transform: translateY(20px);
