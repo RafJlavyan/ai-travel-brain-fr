@@ -1,6 +1,5 @@
 import { Star, MessageSquare, Heart } from "lucide-react";
 import styles from "./styles.module.scss";
-
 interface ReviewProps {
   id: number;
   rating: number;
@@ -10,6 +9,7 @@ interface ReviewProps {
     firstName: string;
     lastName: string;
   };
+  likesCount: number;
 }
 
 export const HotelDetailsReviews = ({
@@ -60,7 +60,7 @@ export const HotelDetailsReviews = ({
               <div className={styles.reviewFooter}>
                 <button className={styles.likeButton}>
                   <Heart size={16} />
-                  <span>0</span>
+                  <span>{item.likesCount}</span>
                 </button>
               </div>
             </div>

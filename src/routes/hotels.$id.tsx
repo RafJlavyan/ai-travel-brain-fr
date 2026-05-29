@@ -37,7 +37,6 @@ export default function HotelDetailsPage() {
   useEffect(() => {
     if (!id) return;
 
-    // Set up network cancellation handling
     const controller = new AbortController();
 
     async function fetchHotelDetails() {
@@ -45,7 +44,6 @@ export default function HotelDetailsPage() {
         setIsLoading(true);
         setError(null);
 
-        // Pass signal directly inside Axios configuration parameter mapping block
         const data = await getHotel(Number(id), { signal: controller.signal });
         const reviews = await getHotelReviews(Number(id), {
           signal: controller.signal,
@@ -65,13 +63,11 @@ export default function HotelDetailsPage() {
 
     fetchHotelDetails();
 
-    // Clean up active browser network fetch cycles on component unmount
     return () => {
       controller.abort();
     };
   }, [id]);
 
-  // Handle network loading state overlay rendering
   if (isLoading) {
     return (
       <div style={{ padding: "4rem", textAlign: "center", color: "#94a3b8" }}>
@@ -80,7 +76,6 @@ export default function HotelDetailsPage() {
     );
   }
 
-  // Handle fetch error state boundaries
   if (error || !hotel) {
     return (
       <div style={{ padding: "4rem", textAlign: "center", color: "#fb7185" }}>
@@ -91,11 +86,13 @@ export default function HotelDetailsPage() {
 
   return (
     <div style={{ maxWidth: "80rem", margin: "0 auto", padding: "2rem 1rem" }}>
-      {/* 1. Renders the main visual layout header element */}
-      <HotelDetailsHeader hotel={hotel} />
-
-      {/* 2. Renders the relational user guest evaluation list data grid block */}
-      <HotelDetailsReviews reviews={reviewsData.data || []} />
+      <HotelDetailsHeader
+        hotel={{
+          ...hotel,
+          reviewsCount: reviewsData?.length || 0,
+        }}
+      />
+      <HotelDetailsReviews reviews={reviewsData?.data || []} />
     </div>
   );
 }

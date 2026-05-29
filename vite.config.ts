@@ -1,11 +1,10 @@
 import { defineConfig } from "vite";
-import { reactRouter } from "@react-router/dev/vite";
+import react from "@vitejs/plugin-react";
 import path from "path";
 
 // https://vite.dev
 export default defineConfig({
-  // Removed react() because reactRouter() compiles React natively
-  plugins: [reactRouter()],
+  plugins: [react()],
   resolve: {
     alias: {
       src: path.resolve(__dirname, "./src"),

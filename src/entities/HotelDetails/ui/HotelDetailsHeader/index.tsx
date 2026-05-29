@@ -1,7 +1,7 @@
 import { Star, MapPin } from "lucide-react";
 import styles from "./styles.module.scss";
 
-interface HotelData {
+type HotelData = {
   name: string;
   city: string;
   country: string;
@@ -9,7 +9,7 @@ interface HotelData {
   stars: number;
   pricePerNight: number;
   image?: string | null;
-}
+} & { reviewsCount: number };
 
 export const HotelDetailsHeader = ({ hotel }: { hotel: HotelData }) => {
   return (
@@ -46,6 +46,10 @@ export const HotelDetailsHeader = ({ hotel }: { hotel: HotelData }) => {
                 }
               />
             ))}
+            <span className={styles.reviewsCount}>
+              {" "}
+              ({hotel.reviewsCount} reviews)
+            </span>
           </div>
         </div>
 
