@@ -27,10 +27,31 @@ interface HotelState {
   }>;
 }
 
+interface ReviewsData {
+  data: Array<{
+    id: number;
+    rating: number;
+    review: string;
+    createdAt: string;
+    user: {
+      firstName: string;
+      lastName: string;
+    };
+    likesCount: number;
+  }>;
+  meta?: {
+    total?: number;
+  };
+}
+
+const isCanceledRequest = (err: unknown) =>
+  err instanceof Error &&
+  (err.name === "CanceledError" || err.name === "AbortError");
+
 export default function HotelDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const [hotel, setHotel] = useState<HotelState | null>(null);
-  const [reviewsData, setReviewsData] = useState(null);
+  const [reviewsData, setReviewsData] = useState<ReviewsData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -50,8 +71,8 @@ export default function HotelDetailsPage() {
         });
         setReviewsData(reviews);
         setHotel(data);
-      } catch (err: any) {
-        if (err.name === "CanceledError" || err.name === "AbortError") return;
+      } catch (err: unknown) {
+        if (isCanceledRequest(err)) return;
         console.error("Failed to load hotel profiles:", err);
         setError(
           "Could not retrieve hotel specifics. Please verify connection credentials.",
@@ -89,7 +110,7 @@ export default function HotelDetailsPage() {
       <HotelDetailsHeader
         hotel={{
           ...hotel,
-          reviewsCount: reviewsData?.length || 0,
+          reviewsCount: reviewsData?.meta?.total || reviewsData?.data.length || 0,
         }}
       />
       <HotelDetailsReviews reviews={reviewsData?.data || []} />

@@ -19,6 +19,7 @@ interface HeaderProps {
     minRating: number;
   }) => void;
   currentFilters: {
+    search?: string;
     country?: string;
     maxPrice?: number;
     minRating?: number;
@@ -36,6 +37,11 @@ export const HotelsHeader = ({
   const [country, setCountry] = useState(currentFilters.country || "");
   const [maxPrice, setMaxPrice] = useState(currentFilters.maxPrice || 1000);
   const [minRating, setMinRating] = useState(currentFilters.minRating || 0);
+
+  useEffect(() => {
+    setInputValue(currentFilters.search || "");
+    setSuggestion("");
+  }, [currentFilters.search]);
 
   useEffect(() => {
     const trimmedInput = inputValue.trim();
