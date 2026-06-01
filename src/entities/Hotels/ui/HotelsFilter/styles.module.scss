@@ -1,0 +1,114 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: sticky;
+  top: 1.5rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #f8fafc;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.clearBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: none;
+  border: none;
+  color: #ff385c;
+  font-size: 0.775rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sectionTitle {
+  font-size: 0.725rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.starGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.starBtn {
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  border: 1.5px solid #1e293b;
+  border-radius: 0.5rem;
+  color: #64748b;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  letter-spacing: 0.1em;
+
+  &:hover {
+    border-color: #fbbf24;
+    color: #fbbf24;
+  }
+
+  &.active {
+    border-color: #fbbf24;
+    background: rgba(251, 191, 36, 0.08);
+    color: #fbbf24;
+  }
+}
+
+.chipList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.chip {
+  padding: 0.4rem 0.75rem;
+  background: transparent;
+  border: 1.5px solid #1e293b;
+  border-radius: 2rem;
+  color: #64748b;
+  font-size: 0.775rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: capitalize;
+
+  &:hover {
+    border-color: #6366f1;
+    color: #f8fafc;
+  }
+
+  &.active {
+    border-color: #6366f1;
+    background: rgba(99, 102, 241, 0.12);
+    color: #a5b4fc;
+  }
+}

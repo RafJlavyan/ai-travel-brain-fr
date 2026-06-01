@@ -8,6 +8,7 @@ import {
   User,
   LogOut,
   ChevronDown,
+  Award,
 } from "lucide-react";
 import styles from "./styles.module.scss";
 
@@ -21,6 +22,7 @@ interface UserProps {
 const NAV_LINKS = [
   { label: "AI Planner", to: "/planner", icon: Sparkles },
   { label: "Explore Hotels", to: "/", icon: Compass },
+  { label: "Recommendations", to: "/recommended-hotels", icon: Award },
   { label: "My Trips", to: "/trips" },
 ];
 
