@@ -1,0 +1,163 @@
+.page {
+  min-height: 100vh;
+  background: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.card {
+  width: 100%;
+  max-width: 480px;
+  background: #111827;
+  border: 1px solid #1e293b;
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.brandIcon {
+  font-size: 1.5rem;
+}
+
+.brandName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f8fafc;
+  letter-spacing: -0.02em;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: #1e293b;
+  border: 1.5px solid #334155;
+  border-radius: 0.75rem;
+  color: #f8fafc;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+
+  &::placeholder {
+    color: #475569;
+  }
+
+  &:focus {
+    border-color: #ff385c;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.passwordWrapper {
+  position: relative;
+
+  .input {
+    padding-right: 2.75rem;
+  }
+}
+
+.eyeBtn {
+  position: absolute;
+  right: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  &:hover:not(:disabled) {
+    color: #f8fafc;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.apiError {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.submitBtn {
+  margin-top: 0.5rem;
+  width: 100%;
+  padding: 0.875rem;
+  border: none;
+  border-radius: 0.75rem;
+  background: #6366f1;
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: #4f46e5;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.registerLink {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.825rem;
+  color: #64748b;
+}
+
+.link {
+  color: #6366f1;
+  text-decoration: none;
+  font-weight: 600;
+
+  &:hover {
+    color: #a5b4fc;
+  }
+}

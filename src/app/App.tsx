@@ -4,6 +4,8 @@ import HomePage from "src/routes/_index";
 import PlannerPage from "src/routes/planner";
 import TripsPage from "src/routes/trips";
 import HotelDetailsPage from "src/routes/hotels.$id";
+import LoginRoute from "src/routes/login";
+import RegisterRoute from "src/routes/register";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +17,14 @@ const router = createBrowserRouter([
       { path: "trips", element: <TripsPage /> },
       { path: "hotels/:id", element: <HotelDetailsPage /> },
     ],
+  },
+  {
+    path: "/login",
+    element: <LoginRoute />,
+  },
+  {
+    path: "/register",
+    element: <RegisterRoute />,
   },
 ]);
 

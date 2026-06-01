@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   Compass,
   Sparkles,
@@ -25,14 +25,31 @@ const NAV_LINKS = [
 ];
 
 export default function Header() {
+  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
 
-  const [currentUser, setCurrentUser] = useState<UserProps | null>({
-    firstName: "Alice",
-    lastName: "Smith",
-    email: "alice.smith@example.com",
+  const [currentUser, setCurrentUser] = useState<UserProps | null>(() => {
+    const userStr = localStorage.getItem("user");
+    if (userStr) {
+      try {
+        return JSON.parse(userStr);
+      } catch {
+        return null;
+      }
+    }
+    return null;
   });
+
+  const handleSignOut = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
+    setCurrentUser(null);
+    setIsProfileOpen(false);
+    setIsMobileMenuOpen(false);
+    navigate("/login");
+  };
 
   // 2. Performance-optimized class resolver function for Desktop links
   const getDesktopLinkClass = ({ isActive }: { isActive: boolean }) =>
@@ -96,7 +113,7 @@ export default function Header() {
                       <User size={16} /> Profile Settings
                     </button>
                     <button
-                      onClick={() => setCurrentUser(null)}
+                      onClick={handleSignOut}
                       className={`${styles.dropdownItem} ${styles.signOut}`}
                     >
                       <LogOut size={16} /> Sign Out
@@ -105,7 +122,7 @@ export default function Header() {
                 )}
               </div>
             ) : (
-              <button className={styles.getStartedBtn}>Get Started</button>
+              <button onClick={() => navigate("/login")} className={styles.getStartedBtn}>Get Started</button>
             )}
           </div>
 
@@ -145,17 +162,20 @@ export default function Header() {
                   <p>{currentUser.email}</p>
                 </div>
                 <button
-                  onClick={() => {
-                    setCurrentUser(null);
-                    setIsMobileMenuOpen(false);
-                  }}
+                  onClick={handleSignOut}
                   className={styles.mobileSignOutBtn}
                 >
                   <LogOut size={20} />
                 </button>
               </div>
             ) : (
-              <button className={styles.mobileGetStartedBtn}>
+              <button
+                onClick={() => {
+                  navigate("/login");
+                  setIsMobileMenuOpen(false);
+                }}
+                className={styles.mobileGetStartedBtn}
+              >
                 Get Started
               </button>
             )}

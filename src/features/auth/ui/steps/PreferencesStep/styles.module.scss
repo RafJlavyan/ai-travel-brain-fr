@@ -1,0 +1,91 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.header {
+  margin-bottom: 0.25rem;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+.chipGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  border: 1.5px solid #334155;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.825rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #6366f1;
+    color: #f8fafc;
+  }
+
+  &.chipActive {
+    border-color: #6366f1;
+    background: rgba(99, 102, 241, 0.15);
+    color: #a5b4fc;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.backBtn {
+  flex: 1;
+  padding: 0.875rem;
+  border: 1.5px solid #334155;
+  border-radius: 0.75rem;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #64748b;
+    color: #f8fafc;
+  }
+}
+
+.nextBtn {
+  flex: 2;
+  padding: 0.875rem;
+  border: none;
+  border-radius: 0.75rem;
+  background: #6366f1;
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #4f46e5;
+  }
+}
