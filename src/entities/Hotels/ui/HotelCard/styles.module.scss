@@ -1,86 +1,167 @@
 .card {
-  background: #ffffff;
-  border-radius: 16px;
+  background: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 1.25rem;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
   cursor: pointer;
-  border: 1px solid #eaeaea;
-  display: flex;
-  flex-direction: column;
-  max-width: 350px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease,
+    border-color 0.25s ease;
+  animation: fadeUp 0.5s ease both;
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.09);
   }
+}
 
-  .imageSection {
-    height: 220px;
-    width: 100%;
-    background: #f0f0f0;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-
-  .content {
-    padding: 1.5rem;
-
-    .name {
-      margin: 0;
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #1a1a1a;
-      line-height: 1.4;
-    }
-
-    .location {
-      margin: 0.5rem 0;
-      font-size: 0.95rem;
-      color: #666;
-    }
-
-    .description {
-      margin: 0.75rem 0;
-      font-size: 0.9rem;
-      color: #333;
-      line-height: 1.5;
-    }
-
-    .details {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 1rem;
-
-      .stars {
-        font-size: 0.9rem;
-        color: #f5a623;
-        font-weight: 500;
-      }
-
-      .reviews {
-        font-size: 0.85rem;
-        color: #888888;
-      }
-
-      .price {
-        font-size: 1rem;
-        font-weight: 600;
-        color: #2c3e50;
-      }
-
-      .ratingGroup {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
+}
+
+.imageWrapper {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+
+  .card:hover & {
+    transform: scale(1.05);
+  }
+}
+
+.imageFallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fallbackIcon {
+  font-size: 3rem;
+  opacity: 0.25;
+}
+
+.starsOverlay {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(10, 15, 28, 0.6);
+  backdrop-filter: blur(8px);
+  padding: 0.3rem 0.6rem;
+  border-radius: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.priceOverlay {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 0.75rem;
+  background: rgba(10, 15, 28, 0.7);
+  backdrop-filter: blur(8px);
+  padding: 0.35rem 0.75rem;
+  border-radius: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  align-items: baseline;
+  gap: 0.2rem;
+}
+
+.price {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.priceUnit {
+  font-size: 0.68rem;
+  color: #64748b;
+}
+
+.body {
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.name {
+  font-size: 0.975rem;
+  font-weight: 700;
+  color: #f8fafc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #475569;
+  font-size: 0.775rem;
+  font-weight: 500;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.description {
+  font-size: 0.8rem;
+  color: #475569;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.6rem;
+  background: rgba(255, 56, 92, 0.07);
+  border: 1px solid rgba(255, 56, 92, 0.16);
+  border-radius: 2rem;
+  color: #fda4af;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.tagMore {
+  padding: 0.25rem 0.6rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 2rem;
+  color: #334155;
+  font-size: 0.7rem;
 }

@@ -1,30 +1,28 @@
-// styles.module.scss
 .headerContainer {
   width: 100%;
   display: flex;
   justify-content: center;
   padding: 1.5rem 1rem;
-  background: #ffffff;
-  border-bottom: 1px solid #f3f4f6;
+  background: #111827;
+  border-bottom: 1px solid #374151;
 }
 
 .searchBarWrapper {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: #1f2937;
+  border: 1px solid #374151;
   padding: 0.5rem;
   border-radius: 9999px;
-  box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.05),
-    0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   max-width: 680px;
   width: 100%;
-  transition: box-shadow 0.2s ease;
+  transition: all 0.2s ease;
 
   &:focus-within {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+    border-color: #ff385c;
+    box-shadow: 0 0 0 3px rgba(255, 56, 92, 0.15);
   }
 }
 
@@ -40,42 +38,70 @@
   color: #9ca3af;
 }
 
+.inputPositioner {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 40px;
+}
+
 .textInput {
   border: none;
   outline: none;
   width: 100%;
+  height: 100%;
   font-size: 0.95rem;
-  color: #1f2937;
+  font-family: inherit;
+  color: #f9fafb;
+  background: transparent;
+  position: relative;
+  z-index: 2;
 
   &::placeholder {
-    color: #9ca3af;
+    color: #6b7280;
   }
+}
+
+.ghostText {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: #6b7280;
+  pointer-events: none;
+  z-index: 1;
+  white-space: pre;
 }
 
 .filterTrigger {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border: 1px solid #e5e7eb;
-  background: none;
+  border: 1px solid #374151;
+  background: #111827;
   padding: 0.5rem 1rem;
   border-radius: 9999px;
   cursor: pointer;
   font-size: 0.875rem;
-  color: #4b5563;
+  color: #f3f4f6;
   font-weight: 500;
   position: relative;
   transition: all 0.2s ease;
 
   &:hover {
-    background: #f9fafb;
-    border-color: #d1d5db;
+    background: #374151;
+    border-color: #4b5563;
   }
 
   .badge {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 4px;
+    right: 4px;
     width: 8px;
     height: 8px;
     background: #ff385c;
@@ -84,26 +110,27 @@
 }
 
 .searchButton {
-  background: #ff385c; // Modern vibrant pink-red accent
+  background: #ff385c;
   color: white;
   border: none;
   padding: 0.65rem 1.5rem;
   border-radius: 9999px;
   font-weight: 600;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  transition: all 0.2s ease;
 
   &:hover {
-    opacity: 0.9;
+    background: #e63152;
   }
 }
 
-/* Modal Styling */
+/* Modal */
+
 .modalBackdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -111,12 +138,13 @@
 }
 
 .modalContent {
-  background: white;
+  background: #1f2937;
+  border: 1px solid #374151;
   border-radius: 1rem;
   width: 100%;
   max-width: 450px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.45);
   animation: slideUp 0.25s ease-out;
 }
 
@@ -125,24 +153,27 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.25rem;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid #374151;
 
   h3 {
     margin: 0;
     font-size: 1.25rem;
     font-weight: 600;
+    color: #f9fafb;
   }
 }
 
 .closeButton {
   border: none;
-  background: none;
+  background: transparent;
   cursor: pointer;
-  color: #6b7280;
+  color: #d1d5db;
   border-radius: 50%;
-  padding: 0.25rem;
+  padding: 0.4rem;
+  transition: background 0.2s ease;
+
   &:hover {
-    background: #f3f4f6;
+    background: #374151;
   }
 }
 
@@ -164,7 +195,7 @@
     gap: 0.25rem;
     font-size: 0.875rem;
     font-weight: 600;
-    color: #374151;
+    color: #f3f4f6;
   }
 }
 
@@ -176,15 +207,21 @@
 
 .valueDisplay {
   font-size: 0.85rem;
-  color: #6b7280;
+  color: #9ca3af;
   font-weight: 500;
 }
 
 .selectInput {
   padding: 0.65rem;
   border-radius: 0.5rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid #374151;
   outline: none;
+  background: #111827;
+  color: #f9fafb;
+
+  &:focus {
+    border-color: #ff385c;
+  }
 }
 
 .rangeInput {
@@ -200,22 +237,24 @@
 
 .ratingChip {
   padding: 0.5rem;
-  border: 1px solid #e5e7eb;
-  background: white;
+  border: 1px solid #374151;
+  background: #111827;
   border-radius: 0.5rem;
   font-size: 0.85rem;
+  color: #f3f4f6;
   cursor: pointer;
   font-weight: 500;
   transition: all 0.15s ease;
 
   &:hover {
-    border-color: #9ca3af;
+    border-color: #6b7280;
+    background: #374151;
   }
 }
 
 .activeChip {
   border-color: #ff385c !important;
-  background: #fff5f6;
+  background: rgba(255, 56, 92, 0.12);
   color: #ff385c;
 }
 
@@ -224,8 +263,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.25rem;
-  border-top: 1px solid #f3f4f6;
-  background: #f9fafb;
+  border-top: 1px solid #374151;
+  background: #111827;
 }
 
 .clearBtn {
@@ -234,60 +273,26 @@
   cursor: pointer;
   text-decoration: underline;
   font-size: 0.875rem;
-  color: #4b5563;
+  color: #d1d5db;
+
+  &:hover {
+    color: #ffffff;
+  }
 }
 
 .applyBtn {
-  background: #111827;
+  background: #ff385c;
   color: white;
   border: none;
   padding: 0.65rem 1.25rem;
   border-radius: 0.5rem;
   font-weight: 600;
   cursor: pointer;
+  transition: background 0.2s ease;
+
   &:hover {
-    background: #1f2937;
+    background: #e63152;
   }
-}
-
-.inputPositioner {
-  position: relative;
-  flex: 1;
-  display: flex;
-  align-items: center;
-  height: 40px;
-}
-
-.textInput {
-  border: none;
-  outline: none;
-  width: 100%;
-  font-size: 0.95rem;
-  font-family: inherit;
-  color: #1f2937;
-  background: transparent; // Crucial to view the ghost layout underneath
-  position: relative;
-  z-index: 2;
-  height: 100%;
-
-  &::placeholder {
-    color: #9ca3af;
-  }
-}
-
-.ghostText {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  font-size: 0.95rem;
-  font-family: inherit;
-  color: #9ca3af; // Emulates light native placeholder text
-  pointer-events: none; // Passes click interactions directly to the text input
-  z-index: 1;
-  white-space: pre;
 }
 
 @keyframes slideUp {
@@ -295,6 +300,7 @@
     transform: translateY(20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;

@@ -1,6 +1,6 @@
 import React from "react";
 import { MapPin, Star, Tag } from "lucide-react";
-import type { Hotel } from "../../model/hotels.types";
+import type { Hotel } from "../../../Hotels/model/hotels.types";
 import styles from "./styles.module.scss";
 
 interface HotelCardProps {

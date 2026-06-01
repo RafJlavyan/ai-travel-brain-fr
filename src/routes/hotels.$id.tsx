@@ -75,7 +75,7 @@ export default function HotelDetailsPage() {
         if (isCanceledRequest(err)) return;
         console.error("Failed to load hotel profiles:", err);
         setError(
-          "Could not retrieve hotel specifics. Please verify connection credentials.",
+          "Could not retrieve hotel specifics. Please verify connection credentials."
         );
       } finally {
         setIsLoading(false);
@@ -110,7 +110,8 @@ export default function HotelDetailsPage() {
       <HotelDetailsHeader
         hotel={{
           ...hotel,
-          reviewsCount: reviewsData?.meta?.total || reviewsData?.data.length || 0,
+          reviewsCount:
+            reviewsData?.meta?.total || reviewsData?.data.length || 0,
         }}
       />
       <HotelDetailsReviews reviews={reviewsData?.data || []} />

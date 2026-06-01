@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { getRecommendedHotels } from "../queries/useGetRecomendedHotels";
-import type { Hotel, HotelsFilterState } from "./hotels.types";
+import type { Hotel, HotelsFilterState } from "../../Hotels/model/hotels.types";
 
 const PRICE_MAP = {
   BUDGET: [0, 100],

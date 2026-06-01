@@ -1,8 +1,8 @@
 import React from "react";
 import { Loader2, Hotel, AlertCircle } from "lucide-react";
-import { RecommendedHotelCard } from "src/entities/Hotels/ui/RecommendedHotels/index";
+import { RecommendedHotelCard } from "src/entities/RecommendedHotels/ui/RecommendedHotelCard/index";
 import { HotelsFilter } from "src/entities/Hotels/ui/HotelsFilter/index";
-import { useRecommendedHotels } from "src/entities/Hotels/model/useRecommendedHotels";
+import { useRecommendedHotels } from "src/entities/RecommendedHotels/model/useRecommendedHotels";
 import styles from "./styles.module.scss";
 
 export const RecommendedHotelsPage: React.FC = () => {
