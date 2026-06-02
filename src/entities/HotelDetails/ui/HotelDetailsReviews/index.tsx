@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Star, MessageSquare, Heart, Send } from "lucide-react";
 import styles from "./styles.module.scss";
 import { useSubmitReview } from "../../queries/useSubmitReview";
+import { useGetMe } from "src/shared/api/getMe";
 
 interface ReviewProps {
   id: number;
@@ -17,13 +18,13 @@ interface ReviewProps {
 }
 
 interface HotelDetailsReviewsProps {
-  hotelId: number; //  Added top-level prop
+  hotelId: number;
   reviews: ReviewProps[];
   onLike: (reviewId: number) => void;
 }
 
 export const HotelDetailsReviews = ({
-  hotelId, //  Destructured
+  hotelId,
   reviews,
   onLike,
 }: HotelDetailsReviewsProps) => {
@@ -33,7 +34,19 @@ export const HotelDetailsReviews = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  //  Destructured properly as an object property
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const data = await useGetMe();
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching 'me' profile:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   const { submitReview } = useSubmitReview();
 
   const handleSubmit = async () => {
@@ -44,7 +57,6 @@ export const HotelDetailsReviews = ({
     setIsSubmitting(true);
     setError(null);
     try {
-      //  Passed hotelId, rating, and clean review text string
       await submitReview(hotelId, rating, reviewText.trim());
       setRating(0);
       setReviewText("");

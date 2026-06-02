@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   Compass,
@@ -11,14 +11,8 @@ import {
   Award,
 } from "lucide-react";
 import styles from "./styles.module.scss";
+import { useGetMe } from "src/shared/api/getMe";
 
-interface UserProps {
-  firstName: string;
-  lastName: string;
-  email: string;
-}
-
-// 1. Extract navigation list definition outside the component to prevent arrays re-allocating memory on every re-render
 const NAV_LINKS = [
   { label: "AI Planner", to: "/planner", icon: Sparkles },
   { label: "Explore Hotels", to: "/", icon: Compass },
@@ -30,18 +24,20 @@ export default function Header() {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
-  const [currentUser, setCurrentUser] = useState<UserProps | null>(() => {
-    const userStr = localStorage.getItem("user");
-    if (userStr) {
+  useEffect(() => {
+    const fetchUser = async () => {
       try {
-        return JSON.parse(userStr);
-      } catch {
-        return null;
+        const data = await useGetMe();
+        setCurrentUser(data);
+      } catch (error) {
+        console.error("Error fetching 'me' profile:", error);
       }
-    }
-    return null;
-  });
+    };
+
+    fetchUser();
+  }, []);
 
   const handleSignOut = () => {
     localStorage.removeItem("accessToken");
@@ -124,7 +120,12 @@ export default function Header() {
                 )}
               </div>
             ) : (
-              <button onClick={() => navigate("/login")} className={styles.getStartedBtn}>Get Started</button>
+              <button
+                onClick={() => navigate("/login")}
+                className={styles.getStartedBtn}
+              >
+                Get Started
+              </button>
             )}
           </div>
 
