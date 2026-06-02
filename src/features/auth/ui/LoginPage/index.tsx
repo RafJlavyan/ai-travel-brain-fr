@@ -37,7 +37,6 @@ export const LoginPage: React.FC = () => {
       const response = await authApi.login(email, password);
       localStorage.setItem("accessToken", response.accessToken);
       localStorage.setItem("refreshToken", response.refreshToken);
-      localStorage.setItem("user", JSON.stringify(response.user));
       navigate("/");
     } catch (err: any) {
       setApiError(err?.response?.data?.message ?? "Invalid email or password");

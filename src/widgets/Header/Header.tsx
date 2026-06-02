@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   Compass,
@@ -24,29 +24,15 @@ export default function Header() {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
-  const [currentUser, setCurrentUser] = useState(null);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const data = await useGetMe();
-        setCurrentUser(data);
-      } catch (error) {
-        console.error("Error fetching 'me' profile:", error);
-      }
-    };
-
-    fetchUser();
-  }, []);
+  const { data: currentUser } = useGetMe();
 
   const handleSignOut = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    localStorage.removeItem("user");
-    setCurrentUser(null);
     setIsProfileOpen(false);
     setIsMobileMenuOpen(false);
-    navigate("/login");
+    // Force reload/re-evaluate auth state
+    window.location.assign("/login");
   };
 
   // 2. Performance-optimized class resolver function for Desktop links

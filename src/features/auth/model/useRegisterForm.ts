@@ -82,7 +82,6 @@ export const useRegisterForm = () => {
       const response = await authApi.register(payload);
       localStorage.setItem("accessToken", response.accessToken);
       localStorage.setItem("refreshToken", response.refreshToken);
-      localStorage.setItem("user", JSON.stringify(response.user));
       
       sessionStorage.removeItem("register_form_data");
       sessionStorage.removeItem("register_form_step");

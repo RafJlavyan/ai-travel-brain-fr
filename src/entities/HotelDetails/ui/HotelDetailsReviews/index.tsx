@@ -1,25 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Star, MessageSquare, Heart, Send } from "lucide-react";
 import styles from "./styles.module.scss";
 import { useSubmitReview } from "../../queries/useSubmitReview";
-import { useGetMe } from "src/shared/api/getMe";
 
-interface ReviewProps {
-  id: number;
-  rating: number;
-  review: string;
-  createdAt: string;
-  user: {
-    firstName: string;
-    lastName: string;
-  };
-  likesCount: number;
-  likedByMe?: boolean;
-}
+import type { Review } from "src/shared/types";
 
 interface HotelDetailsReviewsProps {
   hotelId: number;
-  reviews: ReviewProps[];
+  reviews: Review[];
   onLike: (reviewId: number) => void;
 }
 
@@ -31,39 +19,27 @@ export const HotelDetailsReviews = ({
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const data = await useGetMe();
-        console.log(data);
-      } catch (error) {
-        console.error("Error fetching 'me' profile:", error);
-      }
-    };
-
-    fetchUser();
-  }, []);
-
-  const { submitReview } = useSubmitReview();
+  const submitReviewMutation = useSubmitReview();
+  const isSubmitting = submitReviewMutation.isPending;
 
   const handleSubmit = async () => {
     if (rating === 0) return setError("Please select a rating");
     if (reviewText.trim().length < 10)
       return setError("Review must be at least 10 characters");
 
-    setIsSubmitting(true);
     setError(null);
     try {
-      await submitReview(hotelId, rating, reviewText.trim());
+      await submitReviewMutation.mutateAsync({
+        hotelId,
+        rating,
+        review: reviewText.trim(),
+      });
       setRating(0);
       setReviewText("");
     } catch {
       setError("Failed to submit review. Please try again.");
-    } finally {
-      setIsSubmitting(false);
     }
   };
 

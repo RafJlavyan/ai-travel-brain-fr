@@ -1,94 +1,18 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getHotel } from "src/entities/HotelDetails/queries/useGetHotel";
-import { getHotelReviews } from "src/entities/HotelDetails/queries/useGetHotelReviews";
+import { useGetHotel } from "src/entities/HotelDetails/queries/useGetHotel";
+import { useGetHotelReviews } from "src/entities/HotelDetails/queries/useGetHotelReviews";
 import { HotelDetailsHeader } from "src/entities/HotelDetails/ui/HotelDetailsHeader";
 import { HotelDetailsReviews } from "src/entities/HotelDetails/ui/HotelDetailsReviews";
 
-// Declare standard type mapping shapes reflecting backend Prisma layout properties
-interface HotelState {
-  id: number;
-  name: string;
-  city: string;
-  country: string;
-  description: string;
-  stars: number;
-  pricePerNight: number;
-  image?: string | null;
-  tags: string[];
-  reviews: Array<{
-    id: number;
-    rating: number;
-    review: string;
-    createdAt: string;
-    user: {
-      firstName: string;
-      lastName: string;
-    };
-  }>;
-}
-
-interface ReviewsData {
-  data: Array<{
-    id: number;
-    rating: number;
-    review: string;
-    createdAt: string;
-    user: {
-      firstName: string;
-      lastName: string;
-    };
-    likesCount: number;
-  }>;
-  meta?: {
-    total?: number;
-  };
-}
-
-const isCanceledRequest = (err: unknown) =>
-  err instanceof Error &&
-  (err.name === "CanceledError" || err.name === "AbortError");
-
 export default function HotelDetailsPage() {
   const { id } = useParams<{ id: string }>();
-  const [hotel, setHotel] = useState<HotelState | null>(null);
-  const [reviewsData, setReviewsData] = useState<ReviewsData | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const hotelId = Number(id);
 
-  useEffect(() => {
-    if (!id) return;
+  const { data: hotel, isLoading: isHotelLoading, error: hotelError } = useGetHotel(hotelId);
+  const { data: reviewsData, isLoading: isReviewsLoading } = useGetHotelReviews(hotelId);
 
-    const controller = new AbortController();
-
-    async function fetchHotelDetails() {
-      try {
-        setIsLoading(true);
-        setError(null);
-
-        const data = await getHotel(Number(id), { signal: controller.signal });
-        const reviews = await getHotelReviews(Number(id), {
-          signal: controller.signal,
-        });
-        setReviewsData(reviews);
-        setHotel(data);
-      } catch (err: unknown) {
-        if (isCanceledRequest(err)) return;
-        console.error("Failed to load hotel profiles:", err);
-        setError(
-          "Could not retrieve hotel specifics. Please verify connection credentials."
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchHotelDetails();
-
-    return () => {
-      controller.abort();
-    };
-  }, [id]);
+  const isLoading = isHotelLoading || isReviewsLoading;
+  const error = hotelError ? "Could not retrieve hotel specifics. Please verify connection credentials." : null;
 
   if (isLoading) {
     return (

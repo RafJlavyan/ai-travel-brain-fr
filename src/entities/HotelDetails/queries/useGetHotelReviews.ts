@@ -1,7 +1,15 @@
-import { type AxiosRequestConfig } from "axios";
+import { useQuery } from "@tanstack/react-query";
 import { publicApi } from "src/shared/api/api";
+import type { ReviewsResponse } from "src/shared/types";
 
-export async function getHotelReviews(id: number, config?: AxiosRequestConfig) {
-  const response = await publicApi.get(`/hotels/${id}/reviews`, config);
-  return response.data;
-}
+export const useGetHotelReviews = (id: number) => {
+  return useQuery<ReviewsResponse>({
+    queryKey: ["hotelReviews", id],
+    queryFn: async ({ signal }) => {
+      const response = await publicApi.get<ReviewsResponse>(`/hotels/${id}/reviews`, { signal });
+      return response.data;
+    },
+    enabled: !isNaN(id),
+  });
+};
+

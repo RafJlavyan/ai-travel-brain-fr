@@ -29,7 +29,6 @@ let refreshPromise: Promise<AuthTokens> | null = null;
 const clearAuth = () => {
   localStorage.removeItem("accessToken");
   localStorage.removeItem("refreshToken");
-  localStorage.removeItem("user");
 };
 
 const refreshTokens = async () => {
