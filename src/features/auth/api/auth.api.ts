@@ -1,29 +1,28 @@
-import axios from "axios";
-import type { RegisterFormData, AuthResponse } from "../model/auth.types";
-
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:3000",
-  headers: { "Content-Type": "application/json" },
-});
+import { publicApi } from "src/shared/api/api";
+import type {
+  RegisterFormData,
+  AuthResponse,
+  AuthTokens,
+} from "../model/auth.types";
 
 export const authApi = {
   register: async (
     data: Omit<RegisterFormData, "confirmPassword">
   ): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>("/auth/register", data);
+    const response = await publicApi.post<AuthResponse>("/auth/register", data);
     return response.data;
   },
 
   login: async (email: string, password: string): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>("/auth/login", {
+    const response = await publicApi.post<AuthResponse>("/auth/login", {
       email,
       password,
     });
     return response.data;
   },
 
-  refresh: async (refreshToken: string): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>(
+  refresh: async (refreshToken: string): Promise<AuthTokens> => {
+    const response = await publicApi.post<AuthTokens>(
       "/auth/refresh",
       {},
       {
@@ -34,7 +33,7 @@ export const authApi = {
   },
 
   logout: async (accessToken: string): Promise<void> => {
-    await api.post(
+    await publicApi.post(
       "/auth/logout",
       {},
       {

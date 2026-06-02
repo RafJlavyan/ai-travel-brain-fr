@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "src/shared/api/api";
 
 export interface HotelSearchHistoryItem {
   id: number;
@@ -14,8 +14,8 @@ export interface HotelSearchHistoryItem {
 }
 
 export async function getRecentHotelSearches() {
-  const response = await axios.get<HotelSearchHistoryItem[]>(
-    "http://localhost:3000/hotels/search-history/recent",
+  const response = await api.get<HotelSearchHistoryItem[]>(
+    "/hotels/search-history/recent",
   );
 
   return response.data;
@@ -28,10 +28,9 @@ export async function saveHotelSearch(query: string) {
     return null;
   }
 
-  const response = await axios.post(
-    "http://localhost:3000/hotels/search-history",
-    { query: trimmedQuery },
-  );
+  const response = await api.post("/hotels/search-history", {
+    query: trimmedQuery,
+  });
 
   return response.data;
 }

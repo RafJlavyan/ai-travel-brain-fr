@@ -1,4 +1,4 @@
-import axios from "axios";
+import { publicApi } from "src/shared/api/api";
 
 export async function getHotels(config?: {
   signal?: AbortSignal;
@@ -8,7 +8,7 @@ export async function getHotels(config?: {
   minRating?: number;
   maxPrice?: number;
 }) {
-  const response = await axios.get("http://localhost:3000/hotels/", {
+  const response = await publicApi.get("/hotels/", {
     params: {
       search: config?.search,
       country: config?.country,

@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "src/shared/api/api";
 
 export const useSubmitReview = () => {
   const submitReview = async (
@@ -6,14 +6,9 @@ export const useSubmitReview = () => {
     rating: number,
     review: string
   ) => {
-    const token = localStorage.getItem("accessToken");
-
-    await axios.post(
-      `${
-        import.meta.env.VITE_API_URL ?? "http://localhost:3000"
-      }/hotel-reviews`,
+    await api.post(
+      "/hotel-reviews",
       { hotelId, rating, review },
-      { headers: { Authorization: `Bearer ${token}` } }
     );
   };
 

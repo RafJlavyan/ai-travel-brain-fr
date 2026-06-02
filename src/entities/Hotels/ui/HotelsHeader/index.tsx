@@ -8,7 +8,7 @@ import {
   DollarSign,
   Star,
 } from "lucide-react";
-import axios from "axios";
+import { getSuggestions } from "../../queries/useGetSuggestions";
 import styles from "./styles.module.scss";
 
 interface HeaderProps {
@@ -51,11 +51,8 @@ export const HotelsHeader = ({
     }
 
     const delayDebounce = setTimeout(() => {
-      axios
-        .get(`http://localhost:3000/hotels/autocomplete?q=${trimmedInput}`)
-        .then((response) => {
-          const backendMatches: string[] = response.data;
-
+      getSuggestions(trimmedInput)
+        .then((backendMatches: string[]) => {
           if (backendMatches && backendMatches.length > 0) {
             const firstMatch = backendMatches[0];
 

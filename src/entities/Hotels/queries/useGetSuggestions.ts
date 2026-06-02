@@ -1,8 +1,8 @@
-import axios from "axios";
+import { publicApi } from "src/shared/api/api";
 
 export async function getSuggestions(query: string) {
-  const response = await axios.get(
-    `http://localhost:3000/hotels/autocomplete?q=${query}`,
-  );
+  const response = await publicApi.get("/hotels/autocomplete", {
+    params: { q: query },
+  });
   return response.data;
 }

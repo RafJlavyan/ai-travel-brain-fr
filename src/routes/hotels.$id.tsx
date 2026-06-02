@@ -15,6 +15,7 @@ interface HotelState {
   stars: number;
   pricePerNight: number;
   image?: string | null;
+  tags: string[];
   reviews: Array<{
     id: number;
     rating: number;
@@ -114,7 +115,11 @@ export default function HotelDetailsPage() {
             reviewsData?.meta?.total || reviewsData?.data.length || 0,
         }}
       />
-      <HotelDetailsReviews reviews={reviewsData?.data || []} />
+      <HotelDetailsReviews
+        hotelId={hotel.id}
+        reviews={reviewsData?.data || []}
+        onLike={() => undefined}
+      />
     </div>
   );
 }
