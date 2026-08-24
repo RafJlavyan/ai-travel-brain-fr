@@ -28,6 +28,7 @@ export interface Hotel {
 export interface ReviewUser {
   firstName: string;
   lastName: string;
+  email: string;
 }
 
 export interface Review {

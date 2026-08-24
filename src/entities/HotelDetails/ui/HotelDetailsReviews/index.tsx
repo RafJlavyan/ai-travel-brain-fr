@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { Star, MessageSquare, Heart, Send } from "lucide-react";
+import { Star, MessageSquare, Heart, Send, CheckCircle, Trash2 } from "lucide-react";
 import styles from "./styles.module.scss";
 import { useSubmitReview } from "../../queries/useSubmitReview";
+import { useDeleteReview } from "../../queries/useDeleteReview";
+import { useGetMe } from "src/shared/api/getMe";
 
 import type { Review } from "src/shared/types";
 
@@ -20,9 +22,25 @@ export const HotelDetailsReviews = ({
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [isCollapsing, setIsCollapsing] = useState(false);
 
+  const { data: currentUser } = useGetMe();
   const submitReviewMutation = useSubmitReview();
+  const deleteReviewMutation = useDeleteReview();
   const isSubmitting = submitReviewMutation.isPending;
+
+  const hasReviewed = !!(currentUser && reviews.some(r => r.user.email === currentUser.email));
+
+  const handleDelete = async (reviewId: number) => {
+    try {
+      await deleteReviewMutation.mutateAsync({ reviewId, hotelId });
+      setSubmitted(false);
+      setIsCollapsing(false);
+    } catch (err) {
+      console.error("Failed to delete review:", err);
+    }
+  };
 
   const handleSubmit = async () => {
     if (rating === 0) return setError("Please select a rating");
@@ -36,8 +54,10 @@ export const HotelDetailsReviews = ({
         rating,
         review: reviewText.trim(),
       });
-      setRating(0);
-      setReviewText("");
+      setSubmitted(true);
+      setTimeout(() => {
+        setIsCollapsing(true);
+      }, 1800);
     } catch {
       setError("Failed to submit review. Please try again.");
     }
@@ -48,58 +68,87 @@ export const HotelDetailsReviews = ({
   return (
     <div className={styles.wrapper}>
       {/* ── Write a Review ── */}
-      <div className={styles.writeSection}>
-        <h3 className={styles.writeTitle}>Share your experience</h3>
+      {!hasReviewed && !isCollapsing && (
+        <div
+          className={`${styles.writeSection} ${
+            submitted ? styles.writeSectionSuccess : ""
+          } ${isCollapsing ? styles.writeSectionCollapse : ""}`}
+        >
+          {submitted ? (
+            <div className={styles.successState}>
+              <div className={styles.successIconWrap}>
+                <CheckCircle size={36} className={styles.successIcon} />
+              </div>
+              <h3 className={styles.successTitle}>Review posted!</h3>
+              <p className={styles.successSubtitle}>
+                Thanks for sharing your experience.
+              </p>
+            </div>
+          ) : (
+            <>
+              <h3 className={styles.writeTitle}>Share your experience</h3>
 
-        <div className={styles.ratingPicker}>
-          <span className={styles.ratingPickerLabel}>Your rating</span>
-          <div className={styles.starsInput}>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star
-                key={i}
-                size={26}
-                className={`${styles.starInput} ${
-                  i < activeRating ? styles.starInputFilled : ""
-                }`}
-                // 🔒 Disable rating changes during submission transit
-                onMouseEnter={() => !isSubmitting && setHoverRating(i + 1)}
-                onMouseLeave={() => !isSubmitting && setHoverRating(0)}
-                onClick={() => !isSubmitting && setRating(i + 1)}
+              <div className={styles.ratingPicker}>
+                <span className={styles.ratingPickerLabel}>Your rating</span>
+                <div className={styles.starsInput}>
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star
+                      key={i}
+                      size={26}
+                      className={`${styles.starInput} ${
+                        i < activeRating ? styles.starInputFilled : ""
+                      }`}
+                      onMouseEnter={() =>
+                        !isSubmitting && setHoverRating(i + 1)
+                      }
+                      onMouseLeave={() => !isSubmitting && setHoverRating(0)}
+                      onClick={() => !isSubmitting && setRating(i + 1)}
+                    />
+                  ))}
+                </div>
+                {activeRating > 0 && (
+                  <span className={styles.ratingLabel}>
+                    {
+                      ["", "Poor", "Fair", "Good", "Great", "Excellent"][
+                        activeRating
+                      ]
+                    }
+                  </span>
+                )}
+              </div>
+
+              <textarea
+                className={styles.textarea}
+                placeholder="What did you love? What could be improved? Share your honest thoughts…"
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+                rows={4}
+                maxLength={500}
+                disabled={isSubmitting}
               />
-            ))}
-          </div>
-          {activeRating > 0 && (
-            <span className={styles.ratingLabel}>
-              {["", "Poor", "Fair", "Good", "Great", "Excellent"][activeRating]}
-            </span>
+
+              <div className={styles.writeFooter}>
+                {error && <span className={styles.errorMsg}>{error}</span>}
+                <span className={styles.charCount}>
+                  {reviewText.length} / 500
+                </span>
+                <button
+                  className={`${styles.submitBtn} ${
+                    isSubmitting ? styles.submitBtnLoading : ""
+                  }`}
+                  onClick={handleSubmit}
+                  disabled={isSubmitting}
+                >
+                  <Send size={15} />
+                  {isSubmitting ? "Posting…" : "Post Review"}
+                </button>
+              </div>
+            </>
           )}
         </div>
+      )}
 
-        <textarea
-          className={styles.textarea}
-          placeholder="What did you love? What could be improved? Share your honest thoughts…"
-          value={reviewText}
-          onChange={(e) => setReviewText(e.target.value)}
-          rows={4}
-          maxLength={500} // 🔒 Prevents client overflow bypass
-          disabled={isSubmitting} // 🔒 Disables text changes during transit
-        />
-
-        <div className={styles.writeFooter}>
-          {error && <span className={styles.errorMsg}>{error}</span>}
-          <span className={styles.charCount}>{reviewText.length} / 500</span>
-          <button
-            className={styles.submitBtn}
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-          >
-            <Send size={15} />
-            {isSubmitting ? "Posting…" : "Post Review"}
-          </button>
-        </div>
-      </div>
-
-      {/* ── Reviews List (remains unchanged and correct) ── */}
+      {/* ── Reviews List ── */}
       <div className={styles.listHeader}>
         <h2 className={styles.sectionTitle}>
           <MessageSquare size={20} className={styles.titleIcon} />
@@ -118,7 +167,9 @@ export const HotelDetailsReviews = ({
           {reviews.map((item, index) => (
             <div
               key={item.id}
-              className={styles.reviewCard}
+              className={`${styles.reviewCard} ${
+                item.user.email === currentUser?.email ? styles.myReviewCard : ""
+              }`}
               style={{ animationDelay: `${index * 0.05}s` }}
             >
               <div className={styles.reviewHeader}>
@@ -161,6 +212,17 @@ export const HotelDetailsReviews = ({
                   />
                   <span>{item.likesCount}</span>
                 </button>
+
+                {item.user.email === currentUser?.email && (
+                  <button
+                    className={styles.deleteButton}
+                    onClick={() => handleDelete(item.id)}
+                    disabled={deleteReviewMutation.isPending}
+                  >
+                    <Trash2 size={14} />
+                    <span>Delete</span>
+                  </button>
+                )}
               </div>
             </div>
           ))}
